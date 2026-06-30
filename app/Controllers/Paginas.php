@@ -7,8 +7,12 @@ class Paginas extends Controller{
         ];
         $this->view('paginas/home', $dados);
     }
-   public function sobre($id){
-    echo $id.'<hr>';
-   }
+   public function sobre(){
+    $dados = [
+        'titulo' => 'Sobre Nós',
+        'descricao' => 'Página sobre o Portal Noticias'
+    ];
+     $this->view('paginas/sobre', $dados);
+   }//fim da funcao sobre
 
 }//fim da classe Páginas
