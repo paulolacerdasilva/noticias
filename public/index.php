@@ -1,7 +1,8 @@
 <?php
 include "../app/configuracao.php";
 include "../app/Libraries/Rota.php";
-include "../app/Libraries/Controller.php"
+include "../app/Libraries/Controller.php";
+include "../app/Libraries/Database.php";
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
