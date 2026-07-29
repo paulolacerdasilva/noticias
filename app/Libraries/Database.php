@@ -50,4 +50,31 @@ class Database(){
             endif;
             $this->stmt->bindvalor($parametro,$valor, $tipo);
     }//fim da função bind
+
+    //executa prepared statement
+    public function executa(){
+        return $this->stmt->execute();
+    }//fim da função executa
+
+    //obtem um único registro
+    public function resultado(){
+        $this->executa();
+        return $this->stmt->fetch(PDO::FETCH_OBJ);
+    }//fim da função resultado
+
+    //obtem vários registros
+    public function resultados(){
+        $this->executa();
+        return $this->stmt->fetchAll(PDO::FETCH_OBJ);
+    }//fim da função resultados
+    
+    //retorna o número de linhas afetadas pela última instrução SQL
+    public function totalResultados(){
+        return $this->stmt->rowCount();
+    }//fim da função totalResultados
+
+    //retorna o último Id inserido no banco de dados
+    public function ultimoIdInserido(){
+        return $this->dbh->lastInsertId();
+    }//fim da função ultimoIdInserido
 }//fim da classe Database
