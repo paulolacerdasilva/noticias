@@ -6,7 +6,7 @@
         <div class="card-body">
             <p class="card-text"><small class="text-muted">Preecha o formulário abaixo para fazer seu cadastro</small></p>
 
-            <form name="cadastrar" method="POST" action="#" class="mt-4">
+            <form name="cadastrar" method="POST" action="<?= URL ?>/usuarios/cadastrar" class="mt-4">
             <div class="form-group">
                     <label for="nome">Nome: <sup class="text-danger">*</sup></label>
                     <input type='text' name='nome' id='nome'

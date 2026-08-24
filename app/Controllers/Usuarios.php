@@ -1,54 +1,72 @@
 <?php
 class Usuarios extends Controller{
-    public function cadastrar(){
-       $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-       if(isset($formulario)):
+    public function __construct(){
+        $this->usuarioModel = $this->model('Usuario');
+    }//fim do construtor
+
+  public function cadastrar(){
+
+        $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+        if (isset($formulario)) :
             $dados = [
-                'nome'=>trim($formulario['nome']),
-                'email'=>trim($formulario['email']),
-                'senha'=>trim($formulario['senha']),
-                'confirma_senha'=>trim($formulario['confirma_senha']),
+                'nome' => trim($formulario['nome']),
+                'email' => trim($formulario['email']),
+                'senha' => trim($formulario['senha']),
+                'confirma_senha' => trim($formulario['confirma_senha']),
             ];
-            var_dump($formulario);
-            if(in_array("",$formulario)):
-                if(empty($formulario['nome'])):
+
+            if (in_array("", $formulario)) :
+
+                if (empty($formulario['nome'])) :
                     $dados['nome_erro'] = 'Preencha o campo nome';
                 endif;
-                if(empty($formulario['email'])):
-                    $dados['email_erro'] = 'Preencha o campo email';
+
+                if (empty($formulario['email'])) :
+                    $dados['email_erro'] = 'Preencha o campo e-mail';
                 endif;
-                if(empty($formulario['senha'])):
+
+                if (empty($formulario['senha'])) :
                     $dados['senha_erro'] = 'Preencha o campo senha';
                 endif;
-                if(empty($formulario['confirma_senha'])):
-                    $dados['confirma_senha_erro'] = 'Preencha o campo confirma senha';
-            else: 
-                if(Checa::checarNome($formulario['nome'])):
-                    $dados['nome_erro'] = 'O nome informado é inválido';
-                elseif(Checa::checarEmail($formulario['email'])):
-                        $dados['email_erro'] = 'O email informado é inválido';
-                elseif(strlen($formulario['senha']) < 7 ):
-                        $dados['senha_erro'] = 'A senha deve ter no mínimo 6 caracteres';
-                elseif($formulario['senha'] != $formulario['confirma_senha']):
-                        $dados['confirma_senha_erro'] = 'Senhas diferentes';
-                else:
-                    echo "Pode realizar o cadastro";
+
+                if (empty($formulario['confirma_senha'])) :
+                    $dados['confirma_senha_erro'] = 'Confirme a Senha';
                 endif;
+            else :
+                if (strlen($formulario['senha']) < 6) :
+                    $dados['senha_erro'] = 'A senha deve ter no minimo 6 caracteres';
+                elseif ($formulario['senha'] != $formulario['confirma_senha']) :
+                    $dados['confirma_senha_erro'] = 'As senhas são diferentes';
+                else :
+                   $dados['senha'] = password_hash($formulario['senha'], PASSWORD_DEFAULT);
+                   if($this->usuarioModel->armazenar($dados)):
+                    Sessao::mensagem('usuario', 'Cadastro realizado com sucesso');
+                    URL::redirecionar('usuario/login');
+                   else:
+                    die("Erro ao armazenar usuario no banco de dados");
+                   endif;
+                endif;
+
             endif;
+        else :
+            $dados = [
+                'nome' => '',
+                'email' => '',
+                'senha' => '',
+                'confirma_senha' => '',
+                'nome_erro' => '',
+                'email_erro' => '',
+                'senha_erro' => '',
+                'confirma_senha_erro' => '',
+            ];
+
         endif;
-        else:
-                    $dados=[
-                        'nome'=>'',
-                        'email'=>'',
-                        'senha'=>'',
-                        'confirma_senha'=>'',
-                        'nome_erro'=>'',
-                        'email_erro'=>'',
-                        'senha_erro'=>'',
-                        'confirma_senha_erro'=>'',
-                    ];
-        endif;
-        
-        $this->view('usuarios/cadastrar',$dados);
-    }//fim da função cadastrar
+
+
+        $this->view('usuarios/cadastrar', $dados);
+    }
+public function login(){
+
+        $this->view('usuarios/login');
+    }
 }//fim da classe Usuarios
