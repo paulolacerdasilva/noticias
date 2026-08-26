@@ -7,7 +7,8 @@ class Checa{
             return false;
         endif;
     }//fim da função checarNome
-    public static checarEmail($email){
+
+    public static function checarEmail($email){
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)):
             return true;
         else:
