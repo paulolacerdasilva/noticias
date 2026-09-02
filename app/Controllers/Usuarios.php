@@ -1,10 +1,15 @@
 <?php
-class Usuarios extends Controller{
-    public function __construct(){
-        $this->usuarioModel = $this->model('Usuario');
-    }//fim do construtor
 
-  public function cadastrar(){
+class Usuarios extends Controller
+{
+
+    public function __construct()
+    {
+        $this->usuarioModel = $this->model('Usuario');
+    }
+
+    public function cadastrar()
+    {
 
         $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
         if (isset($formulario)) :
@@ -33,18 +38,27 @@ class Usuarios extends Controller{
                     $dados['confirma_senha_erro'] = 'Confirme a Senha';
                 endif;
             else :
-                if (strlen($formulario['senha']) < 6) :
+                if (Checa::checarNome($formulario['nome'])) :
+                    $dados['nome_erro'] = 'O nome informado é invalido';
+                elseif (Checa::checarEmail($formulario['email'])) :
+                    $dados['email_erro'] = 'O e-mail informado é invalido';
+                    
+                elseif ($this->usuarioModel->checarEmail($formulario['email'])) :
+                    $dados['email_erro'] = 'O e-mail informado já está cadastrado';
+                elseif (strlen($formulario['senha']) < 6) :
                     $dados['senha_erro'] = 'A senha deve ter no minimo 6 caracteres';
                 elseif ($formulario['senha'] != $formulario['confirma_senha']) :
                     $dados['confirma_senha_erro'] = 'As senhas são diferentes';
                 else :
-                   $dados['senha'] = password_hash($formulario['senha'], PASSWORD_DEFAULT);
-                   if($this->usuarioModel->armazenar($dados)):
-                    Sessao::mensagem('usuario', 'Cadastro realizado com sucesso');
-                    Url::redirecionar('usuarios/login');
-                   else:
-                    die("Erro ao armazenar usuario no banco de dados");
-                   endif;
+                    $dados['senha'] = password_hash($formulario['senha'], PASSWORD_DEFAULT);
+
+                    if ($this->usuarioModel->armazenar($dados)) :
+                        Sessao::mensagem('usuario', 'Cadastro realizado com sucesso');
+                        URL::redirecionar('usuarios/login');
+                    else :
+                        die("Erro ao armazenar usuario no banco de dados");
+                    endif;
+
                 endif;
 
             endif;
@@ -64,58 +78,71 @@ class Usuarios extends Controller{
 
 
         $this->view('usuarios/cadastrar', $dados);
-    }//fim da função cadastrar
+    }
 
-    public function login(){
+    public function login()
+    {
+
         $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-        if(isset($formulario)):
+        if (isset($formulario)) :
             $dados = [
                 'email' => trim($formulario['email']),
                 'senha' => trim($formulario['senha']),
             ];
-            if(in_array("", $formulario)):
-                if(empty($formulario['email'])):
-                    $dados['email_erro'] = "Preencha o campo e-mail";
+
+            if (in_array("", $formulario)) :
+
+                if (empty($formulario['email'])) :
+                    $dados['email_erro'] = 'Preencha o campo e-mail';
                 endif;
-                if(empty($formulario['senha'])):
-                    $dados['senha_erro'] = "Preencha o campo Senha";
+
+                if (empty($formulario['senha'])) :
+                    $dados['senha_erro'] = 'Preencha o campo senha';
                 endif;
-            else:
-                if(Checa::checarEmail($formulario['email'])):
-                    $dados[ email_erro] = "O e-mail informado é inválido";
-                else:
+
+            else :
+                if (Checa::checarEmail($formulario['email'])) :
+                    $dados['email_erro'] = 'O e-mail informado é invalido';
+                else :
+                   
                     $usuario = $this->usuarioModel->checarLogin($formulario['email'], $formulario['senha']);
-                    if($usuario):
+
+                    if($usuario): 
                         $this->criarSessaoUsuario($usuario);
                     else:
-                        Sessao::mensagem('usuario','Usuário ou senha inválidos', 'alert alert-danger');
+                        Sessao::mensagem('usuario','Usuario ou senha invalidos','alert alert-danger');
                     endif;
+
                 endif;
+
             endif;
-        else:
+        else :
             $dados = [
                 'email' => '',
                 'senha' => '',
                 'email_erro' => '',
-                'senha_erro' => '',
+                'senha_erro' => ''
             ];
+
         endif;
         $this->view('usuarios/login', $dados);
-    }//fim da função login
-
-    public function criarSessaoUsuario($usuario){
+    }
+    private function criarSessaoUsuario($usuario){
         $_SESSION['usuario_id'] = $usuario->id;
         $_SESSION['usuario_nome'] = $usuario->nome;
         $_SESSION['usuario_email'] = $usuario->email;
 
         URL::redirecionar('posts');
-    }//fim da função criarSessaoUsuario
+    }
+
 
     public function sair(){
-        unset($_SESSION[usuario_id]);
-        unset($_SESSION[usuario_nome]);
-        unset($_SESSION[usuario_email]);
+        unset($_SESSION['usuario_id']);
+        unset($_SESSION['usuario_nome']);
+        unset($_SESSION['usuario_email']);
+
         session_destroy();
+        
         URL::redirecionar('usuarios/login');
-    }//fim da função sair
-}//fim da classe Usuarios
+    }
+}
