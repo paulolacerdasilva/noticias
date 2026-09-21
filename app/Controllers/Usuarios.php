@@ -10,7 +10,6 @@ class Usuarios extends Controller
 
     public function cadastrar()
     {
-
         $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
         if (isset($formulario)) :
             $dados = [
@@ -19,21 +18,16 @@ class Usuarios extends Controller
                 'senha' => trim($formulario['senha']),
                 'confirma_senha' => trim($formulario['confirma_senha']),
             ];
-
             if (in_array("", $formulario)) :
-
                 if (empty($formulario['nome'])) :
                     $dados['nome_erro'] = 'Preencha o campo nome';
                 endif;
-
                 if (empty($formulario['email'])) :
                     $dados['email_erro'] = 'Preencha o campo e-mail';
                 endif;
-
                 if (empty($formulario['senha'])) :
                     $dados['senha_erro'] = 'Preencha o campo senha';
                 endif;
-
                 if (empty($formulario['confirma_senha'])) :
                     $dados['confirma_senha_erro'] = 'Confirme a Senha';
                 endif;
@@ -58,9 +52,7 @@ class Usuarios extends Controller
                     else :
                         die("Erro ao armazenar usuario no banco de dados");
                     endif;
-
                 endif;
-
             endif;
         else :
             $dados = [
@@ -73,10 +65,7 @@ class Usuarios extends Controller
                 'senha_erro' => '',
                 'confirma_senha_erro' => '',
             ];
-
         endif;
-
-
         $this->view('usuarios/cadastrar', $dados);
     }
 
