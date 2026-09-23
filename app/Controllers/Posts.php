@@ -48,4 +48,15 @@ class Posts extends Controller{
         endif;
         $this->view('posts/cadastrar', $dados);
     }//fim da função cadastrar
+    
+    public function ver($id){
+        $post = $this->postModel->lerPostPorId($id);
+        $usuario = $this->usuarioModel->lerUsuarioPorId($post->usuario_id);
+        $dados = [
+            'post'-> $post,
+            'usuario'-> $usuario
+        ];
+        $this->view('post/ver', $dados);
+
+    }
 }//fim da classe Posts

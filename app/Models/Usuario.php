@@ -1,5 +1,4 @@
 <?php
-
 class Usuario
 {
     private $db;
@@ -52,7 +51,6 @@ class Usuario
             return false;
         endif;
     }
-
 
     public function lerUsuarioPorId($id){
         $this->db->query("SELECT * FROM usuarios WHERE id = :id");
