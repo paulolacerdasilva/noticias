@@ -1,1 +1,0 @@
-jquery.funcoes.js

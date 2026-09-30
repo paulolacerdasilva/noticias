@@ -4,6 +4,21 @@ class Post {
     public function __construct(){
         $this->db = new Database();
     }
+        public function lerTresPosts(){
+        $this->db->query("SELECT *, 
+        posts.id as postId, 
+        posts.criado_em as postDataCadastro,
+        usuarios.id as usuarioId,
+        usuarios.criado_em as usuarioDataCadastro
+        FROM posts
+        INNER JOIN usuarios ON
+        posts.usuario_id = usuarios.id
+        ORDER BY posts.id DESC
+        LIMIT 3
+        ");
+        return $this->db->resultados();
+    }//fim da função lerPosts
+    
     public function lerPosts(){
         $this->db->query("SELECT *, 
         posts.id as postId, 

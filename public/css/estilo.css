@@ -1,0 +1,15 @@
+       
+/* Estilo para limitar o texto em exatamente 3 linhas */
+.text-limit {
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Número de linhas */
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Classe que será aplicada via JavaScript para mostrar o texto completo */
+.text-limit.expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+}
