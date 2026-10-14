@@ -29,7 +29,13 @@
                         <?= $dados['texto_erro'] ?>
                     </div>
                 </div>
-
+ <div class="form-group">
+                    <label for="texto">Imagem: <sup class="text-danger">*</sup></label>
+                    <input type="file" name="imagem" id="imagem" value="<?= $dados['imagem'] ?>" class="form-control <?= $dados['imagem_erro'] ? 'is-invalid' : '' ?> ">
+                    <div class="invalid-feedback">
+                        <?=$dados['imagem_erro'] ?>
+                    </div>
+                </div>
                 <input type="submit" value="Atualizar Post" class="btn btn-info btn-block">
 
 

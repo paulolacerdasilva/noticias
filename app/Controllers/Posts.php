@@ -17,10 +17,22 @@ class Posts extends Controller{
 
     public function cadastrar(){
         $formulario = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
+        $foto = $_FILES['imagem'];
+        $nomeFoto = '';
+        if($foto['error'] == 0){
+            $diretorio = 'img/fotos/';
+            if(!is_dir($diretorio)){
+                mkdir($diretorio, 0755, true);
+            }
+            $extensao = pathinfo($foto['name'], PATHINFO_EXTENSION);
+            $nomeFoto = iniqid().'.'.$extensao;
+            move_uploaded_file($foto['tmp_name'], $diretorio.$nomeFoto);
+        }
         if(isset($formulario)):
             $dados = [
                 'titulo' => trim($formulario['titulo']),
                 'texto' => trim($formulario['texto']),
+                'imagem'=> trim($formulario['imagem']),
                 'usuario_id' => $_SESSION['usuario_id']
             ];
             if(in_array("",$formulario)):
@@ -29,6 +41,9 @@ class Posts extends Controller{
                 endif;
                  if(empty($formulario['texto'])):
                     $dados['texto_erro'] = "Preencha o campo texto";
+                endif;
+                if(empty($formulario['imagem'])):
+                    $dados['texto_erro'] = "Preencha o campo imagem";
                 endif;
             else:
                 if($this->postModel->armazenar($dados)):
@@ -42,8 +57,10 @@ class Posts extends Controller{
             $dados = [
                 'titulo' => '',
                 'texto' => '',
+                'imagem' => '',
                 'titulo_erro'=> '',
                 'texto_erro' => '',
+                'imagem_erro'=>''
             ];
         endif;
         $this->view('posts/cadastrar', $dados);
@@ -55,7 +72,8 @@ class Posts extends Controller{
         $usuario = $this->usuarioModel->lerUsuarioPorId($post->usuario_id);
         $dados = [
             'post'=> $post,
-            'usuario'=> $usuario
+            'usuario'=> $usuario,
+            'imagem' => $imagem
         ];
         $this->view('posts/ver', $dados);
     }
@@ -78,7 +96,8 @@ class Posts extends Controller{
             $dados = [
                 'id' => $id,
                 'titulo' => trim($formulario['titulo']),
-                'texto' => trim($formulario['texto'])
+                'texto' => trim($formulario['texto']),
+                'imagem' => trim($formulario['imagem'])
             ];
 
             if (in_array("", $formulario)) :
@@ -89,6 +108,9 @@ class Posts extends Controller{
 
                 if (empty($formulario['texto'])) :
                     $dados['texto_erro'] = 'Preencha o campo texto';
+                endif;
+                if (empty($formulario['imagem'])) :
+                    $dados['imagem_erro'] = 'Preencha o campo imagem';
                 endif;
 
             else :
@@ -113,8 +135,10 @@ class Posts extends Controller{
                 'id' => $post->id,
                 'titulo' => $post->titulo,
                 'texto' => $post->texto,
+                'imagem' => $post->imagem,
                 'titulo_erro' => '',
-                'texto_erro' => ''
+                'texto_erro' => '',
+                'imagem_erro' => ''
             ];
 
         endif;

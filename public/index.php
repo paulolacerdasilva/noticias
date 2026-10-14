@@ -7,24 +7,6 @@ include "../app/autoload.php";
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <style>
-        
-/* Estilo para limitar o texto em exatamente 3 linhas */
-.text-limit {
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Número de linhas */
-    -webkit-box-orient: vertical;  
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-/* Classe que será aplicada via JavaScript para mostrar o texto completo */
-.text-limit.expanded {
-    display: block;
-    -webkit-line-clamp: unset;
-}
-
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= APP_NOME?></title>
@@ -39,7 +21,15 @@ include "../app/autoload.php";
         $rotas = new Rota();
        // $rotas->url();
         include '../app/views/footer.php';
-
     ?>
+   <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div vw-plugin-top-wrapper></div>
+      </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script> new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+    <!-- Fim do Código do VLibras -->
 </body>
 </html>

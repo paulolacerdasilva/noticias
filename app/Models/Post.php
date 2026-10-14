@@ -34,10 +34,11 @@ class Post {
     }//fim da função lerPosts
     
     public function armazenar($dados){
-        $this->db->query("INSERT INTO posts (usuario_id, titulo, texto) VALUES (:usuario_id, :titulo, :texto)");
+        $this->db->query("INSERT INTO posts (usuario_id, titulo, texto, imagem) VALUES (:usuario_id, :titulo, :texto, :imagem)");
         $this->db->bind("usuario_id", $dados['usuario_id']);
         $this->db->bind("titulo", $dados['titulo']);
         $this->db->bind("texto", $dados['texto']);
+        $this->db->bind('imagem',$dados['imagem']);
         if($this->db->executa()):
             return true;
         else:
@@ -63,11 +64,12 @@ class Post {
 
      public function atualizar($dados)
     {
-        $this->db->query("UPDATE posts SET titulo = :titulo, texto = :texto WHERE id = :id");
+        $this->db->query("UPDATE posts SET titulo = :titulo, texto = :texto, imagem = :imagem WHERE id = :id");
 
         $this->db->bind("id", $dados['id']);
         $this->db->bind("titulo", $dados['titulo']);
         $this->db->bind("texto", $dados['texto']);
+        $this->db->bind("imagem", $dados['imagem']);
 
         if ($this->db->executa()) :
             return true;
